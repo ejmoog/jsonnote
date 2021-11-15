@@ -2,7 +2,7 @@
 require_once('./db.php');
 if ("LOGIN" == $_POST["log_action"]) {
 	// login
-	if ("332" !== $_POST["pw"]) {
+	if ($password !== $_POST["pw"]) {
 		echo "Password is wrong!";
 	} else {
 		$_SESSION['login'] = "YES";
