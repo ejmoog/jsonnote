@@ -43,9 +43,9 @@ body {
 			<button class="las_btn savebtn" type="button">SAVE</button>
 		</div>
 		<div id="jsoneditor"></div>
-		<script>
-			// login or not
-			var logbtn = document.querySelector(".logbtn");
+<script>
+// login or not
+var logbtn = document.querySelector(".logbtn");
 var pw = document.querySelector(".loginpw");
 if ("YES" == "<?php echo $_SESSION['login']?>") {
 	pw.style.display = "none";
@@ -55,31 +55,47 @@ if ("YES" == "<?php echo $_SESSION['login']?>") {
 	logbtn.innerHTML = "LOGIN";
 }
 const container = document.getElementById('jsoneditor')
-const options = {
+	const options = {
 	mode: 'tree',
-	modes: ['tree', 'text', 'code', 'view'], // allowed modes
-}
-const json = <?php echo $result_array[0]['json']?>;
-const editor = new JSONEditor(container, options, json)
-// log out
-logbtn.onclick = function () {
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			alert(xmlhttp.responseText);
-			if ("Login" == xmlhttp.responseText) {
-				pw.style.display = "none";
-				logbtn.innerHTML = "LOGOUT";
-			} else {
-				pw.style.display = "inline";
-				logbtn.innerHTML = "LOGIN";
+		modes: ['tree', 'text', 'view'], // allowed modes
+		onEvent: function(node, event) {
+			if (node.value === undefined && event.type === "focus") {
+				var crtjson = editor.get();
+				for (var key in node.path) {
+					crtjson = crtjson[node.path[key]];
+				}
+				editor.options.templates = [
+				{
+					text: 'Copy',
+						title: 'Insert a Copy Node',
+						field: node.field,
+						value: crtjson
+				}
+			];	
 			}
 		}
-	}
-	xmlhttp.open("POST","login.php",true);
-	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
-	xmlhttp.send("log_action=" + logbtn.innerHTML + "&pw=" + pw.value);
 }
+const json = <?php echo $result_array[0]['json'];?>;
+const editor = new JSONEditor(container, options, json);
+	// log out laaa
+	logbtn.onclick = function () {
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				alert(xmlhttp.responseText);
+				if ("Login" == xmlhttp.responseText) {
+					pw.style.display = "none";
+					logbtn.innerHTML = "LOGOUT";
+				} else {
+					pw.style.display = "inline";
+					logbtn.innerHTML = "LOGIN";
+				}
+			}
+		}
+		xmlhttp.open("POST","login.php",true);
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
+		xmlhttp.send("log_action=" + logbtn.innerHTML + "&pw=" + pw.value);
+	}
 // save json data
 document.querySelector(".savebtn").onclick = function () {
 	var pwvalue = pw.value;
@@ -93,6 +109,6 @@ document.querySelector(".savebtn").onclick = function () {
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
 	xmlhttp.send("pw=" + pwvalue + "&json=" + JSON.stringify(editor.get()));
 }
-		</script>
+</script>
 	</body>
 </html>
