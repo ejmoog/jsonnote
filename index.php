@@ -43,6 +43,7 @@ body {
 			<button class="las_btn savebtn" type="button">SAVE</button>
 		</div>
 		<div id="jsoneditor"></div>
+<textarea style="display: none;" id="jsondata" name="" cols="30" rows="10"><?php print_r(json_encode(json_decode($result_array[0]['json'])));?></textarea>
 <script>
 // login or not
 var logbtn = document.querySelector(".logbtn");
@@ -75,7 +76,7 @@ const container = document.getElementById('jsoneditor')
 			}
 		}
 }
-const json = <?php echo $result_array[0]['json'];?>;
+const json = JSON.parse(document.querySelector("#jsondata").value);
 const editor = new JSONEditor(container, options, json);
 	// log out laaa
 	logbtn.onclick = function () {
@@ -107,7 +108,7 @@ document.querySelector(".savebtn").onclick = function () {
 	}
 	xmlhttp.open("POST","save.php",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
-	xmlhttp.send("pw=" + pwvalue + "&json=" + JSON.stringify(editor.get()));
+	xmlhttp.send("pw=" + pwvalue + "&json=" + editor.getText());
 }
 </script>
 	</body>
