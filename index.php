@@ -13,7 +13,7 @@ $conn = null;
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>ejsoon JSONEditor</title>
+		<title>Ejsoon Private JSONEditor</title>
 		<link href="./jsoneditor.min.css" rel="stylesheet" type="text/css">
 		<script src="./jsoneditor.min.js"></script>
 		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
@@ -34,6 +34,9 @@ body {
 		.loadandsave {height: 5%;}
 		.las_btn {height: 100%; font-size: 16px;}
 		.savebtn {}
+		.hide {display: none;}
+		.ib {display: inline-block;}
+		.h100 {height: 100%;}
 		</style>
 	</head>
 	<body>
@@ -43,18 +46,28 @@ body {
 			<button class="las_btn savebtn" type="button">SAVE</button>
 		</div>
 		<div id="jsoneditor"></div>
-<textarea style="display: none;" id="jsondata" name="" cols="30" rows="10"><?php print_r(json_encode(json_decode($result_array[0]['json'])));?></textarea>
+<textarea class="hide" id="jsondata" name="" cols="30" rows="10"><?php print_r(json_encode(json_decode($result_array[0]['json'])));?></textarea>
 <script>
 // login or not
 var logbtn = document.querySelector(".logbtn");
 var pw = document.querySelector(".loginpw");
 if ("YES" == "<?php echo $_SESSION['login']?>") {
-	pw.style.display = "none";
-	logbtn.innerHTML = "LOGOUT";
+	toggle_button_display("login");
 } else {
-	pw.style.display = "inline";
-	logbtn.innerHTML = "LOGIN";
+	toggle_button_display("logout");
 }
+
+// toggle button display
+function toggle_button_display(value) {
+	if ("login" == value) {
+		pw.classList.add("hide");
+		logbtn.innerHTML = "LOGOUT";
+	} else {
+		pw.classList.remove("hide");
+		logbtn.innerHTML = "LOGIN";
+	}
+}
+
 const container = document.getElementById('jsoneditor')
 	const options = {
 	mode: 'tree',
@@ -78,18 +91,16 @@ const container = document.getElementById('jsoneditor')
 }
 const json = JSON.parse(document.querySelector("#jsondata").value);
 const editor = new JSONEditor(container, options, json);
-	// log out laaa
+	// log out
 	logbtn.onclick = function () {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				alert(xmlhttp.responseText);
 				if ("Login" == xmlhttp.responseText) {
-					pw.style.display = "none";
-					logbtn.innerHTML = "LOGOUT";
+					toggle_button_display("login");
 				} else {
-					pw.style.display = "inline";
-					logbtn.innerHTML = "LOGIN";
+					toggle_button_display("logout");
 				}
 			}
 		}
@@ -108,7 +119,7 @@ document.querySelector(".savebtn").onclick = function () {
 	}
 	xmlhttp.open("POST","save.php",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
-	xmlhttp.send("pw=" + pwvalue + "&json=" + editor.getText());
+	xmlhttp.send("id=1" + "&json=" + editor.getText());
 }
 </script>
 	</body>
