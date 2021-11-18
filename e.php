@@ -1,12 +1,18 @@
 <?php 
 require_once('./db.php');
-$conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$sql_execution = "SELECT json FROM ejson_content WHERE id = 2";
-$stmt = $conn->prepare($sql_execution);
-$stmt->execute();
-$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-$result_array = $stmt->fetchAll();
+try {
+	$conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$sql_execution = "SELECT json FROM ejson_content WHERE id = 2";
+	$stmt = $conn->prepare($sql_execution);
+	$stmt->execute();
+	$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+	$result_array = $stmt->fetchAll();
+}
+catch(PDOException $e)
+{
+	echo "Error: " . $e->getMessage();
+}
 $conn = null;
 ?>
 <!DOCTYPE HTML>

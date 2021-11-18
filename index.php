@@ -1,19 +1,25 @@
 <?php 
 require_once('./db.php');
-$conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$sql_execution = "SELECT json FROM ejson_content WHERE id = 1";
-$stmt = $conn->prepare($sql_execution);
-$stmt->execute();
-$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-$result_array = $stmt->fetchAll();
+try {
+	$conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$sql_execution = "SELECT json FROM ejson_content WHERE id = 1";
+	$stmt = $conn->prepare($sql_execution);
+	$stmt->execute();
+	$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+	$result_array = $stmt->fetchAll();
+}
+catch(PDOException $e)
+{
+	echo "Error: " . $e->getMessage();
+}
 $conn = null;
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Ejsoon Private JSONEditor</title>
+		<title>Ejsoon JSONEditor</title>
 		<link href="./jsoneditor.min.css" rel="stylesheet" type="text/css">
 		<script src="./jsoneditor.min.js"></script>
 		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
