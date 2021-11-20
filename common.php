@@ -135,10 +135,12 @@ editor.updateText(document.querySelector("#jsondata").value);
 document.querySelector(".savebtn").onclick = function () {
 <?php if (2 == $json_id) { ?>
 	// encrypt json value
-	document.querySelector("#jsondata").value = editor.getText();
-	acrypto("encrypto", function() {
+	acrypto("encrypto", editor.getText(), function(rtntxt) {
+		var dataPost = rtntxt;
+<?php } else { ?>
+		var dataPost = editor.getText();
 <?php } ?>
-		encryptJson = document.querySelector("#jsondata").value;
+		document.querySelector("#jsondata").value = editor.getText();
 		// xmlhttp post
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
@@ -148,21 +150,21 @@ document.querySelector(".savebtn").onclick = function () {
 		}
 		xmlhttp.open("POST","save.php",true);
 		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");              //or multipart/form-data
-		xmlhttp.send("id=2" + "&json=" + encryptJson);
+		xmlhttp.send("id=<?php echo $json_id?>" + "&json=" + dataPost);
 <?php if (2 == $json_id) { ?>
 	});
 <?php } ?>
 }
 <?php if (2 == $json_id) { ?>
-// crypt and update jsonEditor
+// decrypt and update jsonEditor
 document.querySelector(".cryptbtn").onclick = function () {
-	originData = document.querySelector("#jsondata").value;
-	acrypto("decrypto", function () {
-		if (testJSON(document.querySelector("#jsondata").value)) {
-			editor.updateText(document.querySelector("#jsondata").value);
+	// decryp txt
+	var jsondata = document.querySelector("#jsondata");
+	acrypto("decrypto", jsondata.value, function (rtntxt) {
+		if (testJSON(rtntxt)) {
+			editor.updateText(rtntxt);
 		} else {
 			alert("Password is wrong!");
-			document.querySelector("#jsondata").value = originData;
 		}
 		// test json is valid
 		function testJSON(text) {
@@ -181,17 +183,17 @@ document.querySelector(".cryptbtn").onclick = function () {
 </script>
 	<script>
 		// encrypto or decrypto
-		function acrypto(thus, restfun = undefined) {
+		function acrypto(cryptType, cryptValue = '',  restfun = undefined) {
 			var ni = function(akey) {
 				// case encrypto or decrypto
-				var texthd = document.getElementById('jsondata');
-				if ('encrypto' == thus) {
-					texthd.value = ctrengo(akey, texthd.value);
-				} else if ('decrypto' == thus) {
-					texthd.value = ctrdego(akey, texthd.value);
+				var texthd = "";
+				if ('encrypto' == cryptType) {
+					texthd = ctrengo(akey, cryptValue);
+				} else if ('decrypto' == cryptType) {
+					texthd = ctrdego(akey, cryptValue);
 				}
 				if (typeof restfun == "function") {
-					restfun();
+					restfun(texthd);
 				}
 			}
 			var apw = document.getElementById('cryptinput');
