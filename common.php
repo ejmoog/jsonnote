@@ -137,8 +137,8 @@ document.querySelector(".savebtn").onclick = function () {
 	// encrypt json value
 	document.querySelector("#jsondata").value = editor.getText();
 	acrypto("encrypto", function() {
-		encryptJson = document.querySelector("#jsondata").value;
 <?php } ?>
+		encryptJson = document.querySelector("#jsondata").value;
 		// xmlhttp post
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
