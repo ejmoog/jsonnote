@@ -63,6 +63,7 @@ body {
 <script>
 // login or not
 var logbtn = document.querySelector(".logbtn");
+var savebtn = document.querySelector(".savebtn");
 var pw = document.querySelector(".loginpw");
 if ("YES" == "<?php echo $_SESSION['login']?>") {
 	toggle_button_display("login");
@@ -74,11 +75,14 @@ function toggle_button_display(value) {
 	if ("login" == value) {
 		pw.classList.add("hide");
 		logbtn.innerHTML = "LOGOUT";
+		savebtn.classList.remove("hide");
 	} else {
 		pw.classList.remove("hide");
 		logbtn.innerHTML = "LOGIN";
+		savebtn.classList.add("hide");
 	}
 <?php if (2 == $json_id) { ?>
+	savebtn.classList.add("hide");
 	if ("login" == value) {
 		document.querySelector(".cryptdiv").classList.remove("hide");
 	} else {
@@ -132,7 +136,7 @@ editor.updateText(document.querySelector("#jsondata").value);
 		xmlhttp.send("log_action=" + logbtn.innerHTML + "&pw=" + pw.value);
 	}
 // save json data
-document.querySelector(".savebtn").onclick = function () {
+savebtn.onclick = function () {
 <?php if (2 == $json_id) { ?>
 	// encrypt json value
 	acrypto("encrypto", editor.getText(), function(rtntxt) {
@@ -163,7 +167,9 @@ document.querySelector(".cryptbtn").onclick = function () {
 	acrypto("decrypto", jsondata.value, function (rtntxt) {
 		if (testJSON(rtntxt)) {
 			editor.updateText(rtntxt);
-		} else {
+			document.querySelector(".cryptbtn").classList.add("hide");
+			savebtn.classList.remove("hide");
+			} else {
 			alert("Password is wrong!");
 		}
 		// test json is valid
