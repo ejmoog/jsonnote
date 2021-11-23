@@ -19,7 +19,7 @@ $conn = null;
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Ejsoon Private JSONEditor</title>
+		<title>Ejsoon <?php echo $json_title ?> JSONEditor</title>
 		<link href="./jsoneditor.min.css" rel="stylesheet" type="text/css">
 		<script src="./jsoneditor.min.js"></script>
 		<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
